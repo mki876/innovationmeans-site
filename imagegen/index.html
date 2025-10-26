@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Image Generator — Innovation Means World</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Offline image generator: add text, emojis, images, gradients and export as PNG — no accounts, no tracking." />
+  <link rel="icon" href="/icon.png" type="image/png" />
+  <style>
+    :root{
+      --bg:#0b1020; --panel:#121a33; --soft:#1a2448; --text:#eaf0ff; --muted:#a9b5d9;
+      --brand:#5aa2ff; --brand-2:#7ef0ff; --ok:#4ade80; --shadow:0 12px 40px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:linear-gradient(180deg,var(--bg),#0e1530);font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif;color:var(--text)}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    .topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--text)}
+    .brand img{width:32px;height:32px;border-radius:8px}
+    .panel{background:linear-gradient(180deg,var(--panel),var(--soft));border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow)}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    input[type="text"]{background:#0e1530;border:1px solid #2b3763;color:var(--text);padding:9px 10px;border-radius:10px;min-width:220px}
+    select, input[type="color"], input[type="range"], input[type="file"]{
+      background:#0e1530;border:1px solid #2b3763;color:var(--text);padding:8px;border-radius:10px
+    }
+    .btn{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#061023;border:none;
+      padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+    .btn.secondary{background:#222d55;color:var(--text);border:1px solid #2b3763;box-shadow:none}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .stage{margin-top:14px}
+    canvas{width:100%;max-width:1100px;aspect-ratio:16/9;background:#0b0f22;border:10px solid #0c1330;border-radius:18px;box-shadow:var(--shadow)}
+    .hint{color:var(--muted);font-size:13px;margin-top:8px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    a.back{position:fixed;top:10px;left:10px;text-decoration:none;background:#1c2850;border:1px solid #283362;color:#fff;padding:6px 10px;border-radius:8px;font-size:13px}
+  </style>
+</head>
+<body>
+  <a class="back" href="/">⬅ Back to Home</a>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="/">
+        <img src="/icon.png" alt="IMW icon"><strong>Innovation Means World</strong>
+      </a>
+      <div class="hint">All offline • No tracking • Export as PNG</div>
+    </div>
+
+    <div class="panel toolbar">
+      <input id="txt" type="text" placeholder="Add caption text…" />
+      <input id="color" type="color" value="#ffffff" title="Text/emoji color" />
+      <label>Size <input id="size" type="range" min="20" max="160" value="64"></label>
+      <button class="btn" id="addText">Add Text</button>
+
+      <select id="emoji">
+        <option>💡</option><option>🚀</option><option>🌟</option>
+        <option>🎨</option><option>🧠</option><option>🌱</option>
+        <option>✨</option><option>🔥</option><option>📚</option>
+      </select>
+      <button class="btn" id="addEmoji">Add Emoji</button>
+
+      <input id="imgInput" type="file" accept="image/*" />
+      <button class="btn" id="randomBg">Random Gradient</button>
+      <button class="btn secondary" id="clear">Clear</button>
+      <button class="btn" id="save">Save PNG</button>
+    </div>
+
+    <div class="stage">
+      <canvas id="c"></canvas>
+      <div class="hint">🖱️ Drag items to move • ⌫ Delete to remove selected • Double-click item to edit text • Works offline</div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+
+    // Logical canvas size (keeps export crisp)
+    function resizeCanvas(){
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(w * ratio);
+      canvas.height = Math.floor(h * ratio);
+      ctx.setTransform(ratio,0,0,ratio,0,0);
+      draw();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Scene graph
+    const items = []; // {type:'text'|'emoji'|'image', text|emoji|img, x, y, size, color}
+    let bg = randGradientDef();
+
+    // UI elements
+    const el = id=>document.getElementById(id);
+    const txt = el('txt'), color = el('color'), size = el('size');
+    el('addText').onclick = ()=> addText(txt.value || 'New text');
+    el('addEmoji').onclick = ()=> addEmoji(el('emoji').value);
+    el('randomBg').onclick = ()=>{ bg = randGradientDef(); draw(); };
+    el('clear').onclick = ()=>{ items.length = 0; draw(); };
+    el('save').onclick = downloadPNG;
+    el('imgInput').onchange = loadImage;
+
+    // Adders
+    function addText(t){
+      items.push({type:'text', text:t, x:canvas.clientWidth/2, y:canvas.clientHeight/2, size:+size.value, color:color.value});
+      draw();
+    }
+    function addEmoji(e){
+      items.push({type:'emoji', emoji:e, x:80+Math.random()*(canvas.clientWidth-160), y:80+Math.random()*(canvas.clientHeight-160), size:+size.value, color:color.value});
+      draw();
+    }
+    function loadImage(ev){
+      const file = ev.target.files[0];
+      if(!file) return;
+      const img = new Image();
+      img.onload = ()=>{
+        // scale image to fit half the canvas width
+        const scale = Math.min((canvas.clientWidth*0.5)/img.width, (canvas.clientHeight*0.5)/img.height);
+        items.push({type:'image', img, x:canvas.clientWidth/2, y:canvas.clientHeight/2, w:img.width*scale, h:img.height*scale});
+        draw();
+        ev.target.value = '';
+      };
+      img.src = URL.createObjectURL(file);
+    }
+
+    // Drawing
+    function draw(){
+      // background gradient
+      const g = ctx.createLinearGradient(0,0,canvas.clientWidth,canvas.clientHeight);
+      g.addColorStop(0, bg.a); g.addColorStop(1, bg.b);
+      ctx.fillStyle = g; ctx.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
+
+      // items
+      for(const it of items){
+        if(it.type==='text'){
+          ctx.fillStyle = it.color; ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.font = `700 ${it.size}px Inter,system-ui,Segoe UI,Arial`;
+          ctx.fillText(it.text, it.x, it.y);
+        }else if(it.type==='emoji'){
+          ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.font = `${it.size}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", system-ui`;
+          ctx.fillText(it.emoji, it.x, it.y);
+        }else if(it.type==='image'){
+          ctx.drawImage(it.img, it.x - it.w/2, it.y - it.h/2, it.w, it.h);
+        }
+      }
+      // selection outline
+      if(sel){
+        ctx.strokeStyle = '#7ef0ff';
+        ctx.setLineDash([6,4]); ctx.lineWidth = 2;
+        const r = bounds(sel);
+        ctx.strokeRect(r.x, r.y, r.w, r.h);
+        ctx.setLineDash([]);
+      }
+    }
+
+    function randGradientDef(){
+      const colors = ['#0f172a','#0b1020','#102347','#1a2448','#1f3a5f','#234',' #182038'];
+      const brights = ['#5aa2ff','#7ef0ff','#9a8cff','#ff8ad1','#ffd166','#80ed99'];
+      return {a: colors[Math.floor(Math.random()*colors.length)], b: brights[Math.floor(Math.random()*brights.length)]};
+    }
+
+    // Hit-testing & dragging
+    let sel = null, dragDx=0, dragDy=0;
+    canvas.addEventListener('mousedown', down);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    canvas.addEventListener('dblclick', editSelected);
+    window.addEventListener('keydown', e=>{
+      if((e.key==='Delete'||e.key==='Backspace') && sel){
+        const i = items.indexOf(sel); if(i>-1){ items.splice(i,1); sel=null; draw(); }
+      }
+    });
+
+    function down(e){
+      const p = point(e);
+      sel = pick(p.x,p.y);
+      if(sel){
+        const r = bounds(sel);
+        dragDx = p.x - r.x - r.w/2;
+        dragDy = p.y - r.y - r.h/2;
+      }
+      draw();
+    }
+    function move(e){
+      if(!sel) return;
+      const p = point(e);
+      const r = bounds(sel);
+      const cx = p.x - dragDx, cy = p.y - dragDy;
+      // move by center
+      if(sel.type==='image'){ sel.x = cx; sel.y = cy; }
+      else { sel.x = cx; sel.y = cy; }
+      draw();
+    }
+    function up(){}
+
+    function editSelected(){
+      if(!sel) return;
+      if(sel.type==='text'){
+        const v = prompt('Edit text:', sel.text);
+        if(v!==null){ sel.text=v; draw(); }
+      }else if(sel.type==='emoji'){
+        const v = prompt('Change emoji:', sel.emoji);
+        if(v!==null){ sel.emoji=v; draw(); }
+      }
+    }
+
+    function pick(x,y){
+      // pick top-most
+      for(let i=items.length-1;i>=0;i--){
+        const it = items[i];
+        const r = bounds(it);
+        if(x>=r.x && y>=r.y && x<=r.x+r.w && y<=r.y+r.h) return it;
+      }
+      return null;
+    }
+    function bounds(it){
+      if(it.type==='text'){
+        ctx.font = `700 ${it.size}px Inter,system-ui,Segoe UI,Arial`;
+        const w = ctx.measureText(it.text).width;
+        const h = it.size;
+        return {x: it.x - w/2 - 6, y: it.y - h/2 - 6, w: w+12, h: h+12};
+      }else if(it.type==='emoji'){
+        const w = it.size, h = it.size;
+        return {x: it.x - w/2, y: it.y - h/2, w, h};
+      }else{
+        return {x: it.x - it.w/2, y: it.y - it.h/2, w: it.w, h: it.h};
+      }
+    }
+    function point(e){
+      const r = canvas.getBoundingClientRect();
+      return {x: e.clientX - r.left, y: e.clientY - r.top};
+    }
+
+    // Export
+    function downloadPNG(){
+      // temporarily render at device pixels for sharp export
+      const link = document.createElement('a');
+      link.download = 'imw-image.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // init
+    // give the canvas a fixed aspect via CSS; just trigger first layout
+    resizeCanvas();
+  </script>
+</body>
+</html>
