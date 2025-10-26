@@ -36,8 +36,14 @@
    onclick="window.location.href='innosketch/'; return false;">
   🚀 Launch InnoSketch
 </a>
+<script>
+  // Extra safety: if something intercepts the click, force navigation.
+  document.getElementById('launch-innosketch')?.addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = 'innosketch/';
+  });
+</script>
 
-</a>
 
 </body>
 </html>
