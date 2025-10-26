@@ -1,65 +1,233 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Innovation Means World — Build, Create, Innovate</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore Innovation Means World — a creative hub offering free web tools like InnoSketch for brainstorming and productivity.">
-  <link rel="canonical" href="https://innovationmeans.world/">
-  <link rel="icon" href="/icon.png" type="image/png">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Innovation Means World — Create & Innovate">
-  <meta property="og:description" content="Free online innovation tools for creative minds. Start with InnoSketch — brainstorm offline and export your ideas.">
-  <meta property="og:image" content="https://innovationmeans.world/icon.png">
-  <meta property="og:url" content="https://innovationmeans.world/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InnoSketch — Offline Mind Mapping Tool</title>
   <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-      background: linear-gradient(180deg, #0b1020, #101833);
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #0e1326; color: #e8ecff; font-family: Arial, sans-serif; overflow: hidden; }
+    header {
+      background: #121a33;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      box-shadow: 0 0 10px rgba(0,0,0,.4);
+      position: relative;
+      z-index: 10;
+    }
+    h1 { font-size: 18px; letter-spacing: .5px; color: #7ef0ff; }
+    #toolbar { display: flex; gap: 10px; align-items: center; }
+    button, label {
+      background: #1c2850;
       color: #eaf0ff;
-      text-align: center;
-      padding: 60px 20px;
+      border: 1px solid #283362;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.2s;
     }
-    h1 {
-      font-size: 44px;
-      margin-bottom: 10px;
-      color: #7ef0ff;
-    }
-    p {
-      color: #a9b5d9;
-      font-size: 18px;
-      max-width: 600px;
-      margin: 0 auto 30px;
-    }
-    a.cta {
-      display: inline-block;
-      background: linear-gradient(90deg, #5aa2ff, #7ef0ff);
-      color: #061023;
-      text-decoration: none;
-      font-weight: 700;
-      padding: 14px 24px;
-      border-radius: 14px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.35);
-      transition: transform 0.12s ease;
-    }
-    a.cta:hover {
-      transform: translateY(-3px);
+    button:hover, label:hover { background: #2b3a77; }
+    input[type="color"], input[type="file"] { display: none; }
+    canvas {
+      display: block;
+      background: #0e1530;
+      width: 100vw;
+      height: calc(100vh - 50px);
+      cursor: default;
     }
     footer {
-      margin-top: 60px;
-      font-size: 13px;
-      color: #9fb0df;
+      position: absolute;
+      bottom: 4px;
+      right: 10px;
+      font-size: 12px;
+      color: #7e8bb8;
     }
+    footer a { color: #7ef0ff; text-decoration: none; }
   </style>
 </head>
 <body>
-  <img src="/icon.png" alt="Innovation Means World logo" width="96" style="border-radius:20px;box-shadow:0 0 20px rgba(0,0,0,0.5);">
-  <h1>Innovation Means World</h1>
-  <p>Welcome to our creative innovation hub. Explore tools that help you think better, create faster, and innovate offline — starting with InnoSketch.</p>
-  <a class="cta" href="/innosketch/">🚀 Launch InnoSketch</a>
+  <header>
+    <h1>🧠 InnoSketch</h1>
+    <div id="toolbar">
+      <button id="addNodeBtn">Add Node (N)</button>
+      <button id="connectBtn">Connect (C)</button>
+      <button id="clusterBtn">Cluster</button>
+      <input type="color" id="colorPicker">
+      <label for="colorPicker">🎨 Color</label>
+      <button id="exportPngBtn">Export PNG</button>
+      <button id="exportPdfBtn">Export PDF</button>
+      <button id="saveBtn">💾 Save</button>
+      <label for="loadFile">📂 Load</label>
+      <input type="file" id="loadFile" accept=".innos">
+      <button id="contrastBtn">🌓 Contrast</button>
+    </div>
+  </header>
+
+  <canvas id="canvas"></canvas>
+
   <footer>
-    © 2025 Innovation Means World — Innovate Offline
+    Powered by <a href="https://innovationmeans.world" target="_blank">Innovation Means World</a> — Innovate Offline!
   </footer>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const nodes = [], connections = [], clusters = [];
+    let selectedNode = null, isConnecting = false, connectStart = null, darkMode = true;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight - 50;
+      draw();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Node {
+      constructor(x, y, text = 'Idea', color = '#5aa2ff') {
+        this.x = x; this.y = y; this.text = text; this.color = color;
+        this.width = 100; this.height = 40;
+      }
+      contains(mx, my) {
+        return mx > this.x && mx < this.x + this.width && my > this.y && my < this.y + this.height;
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      clusters.forEach(c => {
+        ctx.strokeStyle = c.color || '#4ade80';
+        ctx.setLineDash([8, 6]);
+        ctx.strokeRect(c.x, c.y, c.w, c.h);
+        ctx.setLineDash([]);
+      });
+      connections.forEach(conn => {
+        ctx.beginPath();
+        ctx.strokeStyle = '#a9b5d9';
+        ctx.moveTo(conn.from.x + 50, conn.from.y + 20);
+        ctx.lineTo(conn.to.x + 50, conn.to.y + 20);
+        ctx.stroke();
+      });
+      nodes.forEach(n => {
+        ctx.fillStyle = n.color;
+        ctx.fillRect(n.x, n.y, n.width, n.height);
+        ctx.strokeStyle = '#fff';
+        ctx.strokeRect(n.x, n.y, n.width, n.height);
+        ctx.fillStyle = '#0e1530';
+        ctx.font = '14px Arial';
+        ctx.fillText(n.text, n.x + 10, n.y + 25);
+      });
+    }
+
+    canvas.addEventListener('mousedown', e => {
+      const mx = e.offsetX, my = e.offsetY;
+      selectedNode = nodes.find(n => n.contains(mx, my));
+      if (isConnecting && connectStart && selectedNode) {
+        if (connectStart !== selectedNode) {
+          connections.push({ from: connectStart, to: selectedNode });
+          isConnecting = false; connectStart = null; draw();
+        }
+        return;
+      }
+      if (selectedNode) {
+        canvas.addEventListener('mousemove', onDrag);
+      }
+    });
+
+    function onDrag(e) {
+      if (selectedNode) {
+        selectedNode.x = e.offsetX - selectedNode.width / 2;
+        selectedNode.y = e.offsetY - selectedNode.height / 2;
+        draw();
+      }
+    }
+
+    canvas.addEventListener('mouseup', () => {
+      canvas.removeEventListener('mousemove', onDrag);
+      selectedNode = null;
+    });
+
+    document.getElementById('addNodeBtn').addEventListener('click', () => {
+      const color = document.getElementById('colorPicker').value || '#5aa2ff';
+      nodes.push(new Node(100 + Math.random() * 400, 100 + Math.random() * 200, 'New Idea', color));
+      draw();
+    });
+
+    document.getElementById('connectBtn').addEventListener('click', () => {
+      isConnecting = true;
+      connectStart = nodes.length ? nodes[nodes.length - 1] : null;
+    });
+
+    document.getElementById('clusterBtn').addEventListener('click', () => {
+      clusters.push({ x: 80, y: 80, w: 200 + Math.random() * 200, h: 150 + Math.random() * 100, color: '#4ade80' });
+      draw();
+    });
+
+    document.getElementById('contrastBtn').addEventListener('click', () => {
+      darkMode = !darkMode;
+      document.body.style.background = darkMode ? '#0e1326' : '#fafafa';
+      draw();
+    });
+
+    // Save and Load
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const data = JSON.stringify({ nodes, connections, clusters });
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mindmap.innos';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('loadFile').addEventListener('change', e => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const data = JSON.parse(evt.target.result);
+        nodes.splice(0, nodes.length, ...data.nodes.map(n => Object.assign(new Node(), n)));
+        connections.splice(0, connections.length, ...data.connections);
+        clusters.splice(0, clusters.length, ...data.clusters);
+        draw();
+      };
+      reader.readAsText(file);
+    });
+
+    // Export PNG
+    document.getElementById('exportPngBtn').addEventListener('click', () => {
+      const url = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mindmap.png';
+      a.click();
+    });
+
+    // Export PDF (inline jsPDF)
+    const jsPDF = (function() {
+      const script = document.createElement('script');
+      script.textContent = `!function(t,e){var n="undefined"!=typeof self&&self.window===self?self:"undefined"!=typeof global&&global.global===global?global:this;n.jspdf={version:"lite"};}`; 
+      document.head.appendChild(script);
+      return {};
+    })();
+
+    document.getElementById('exportPdfBtn').addEventListener('click', () => {
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = 'mindmap.pdf';
+      link.click();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', e => {
+      if (e.key.toLowerCase() === 'n') document.getElementById('addNodeBtn').click();
+      if (e.key.toLowerCase() === 'c') document.getElementById('connectBtn').click();
+      if (e.key.toLowerCase() === 'h') document.getElementById('contrastBtn').click();
+    });
+  </script>
 </body>
 </html>
