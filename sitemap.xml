@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
     <loc>https://innovationmeans.world/</loc>
     <lastmod>2025-10-25</lastmod>
     <priority>1.00</priority>
+    <changefreq>weekly</changefreq>
   </url>
+
+  <url>
+    <loc>https://innovationmeans.world/tools/</loc>
+    <lastmod>2025-10-25</lastmod>
+    <priority>0.80</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://innovationmeans.world/tools/index.html</loc>
+    <lastmod>2025-10-25</lastmod>
+    <priority>0.70</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
 </urlset>
