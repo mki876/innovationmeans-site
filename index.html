@@ -16,35 +16,59 @@
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
       background:linear-gradient(180deg,#0b1020,#101833);color:#eaf0ff;text-align:center;padding:60px 20px}
     h1{font-size:44px;margin-bottom:10px;color:#7ef0ff}
-    p{color:#a9b5d9;font-size:18px;max-width:640px;margin:0 auto 30px}
+    h2{color:#9be7ff;margin-top:60px}
+    p{color:#a9b5d9;font-size:18px;max-width:720px;margin:0 auto 30px}
     a.cta{display:inline-block;background:linear-gradient(90deg,#5aa2ff,#7ef0ff);color:#061023;
       text-decoration:none;font-weight:700;padding:14px 24px;border-radius:14px;
-      box-shadow:0 12px 40px rgba(0,0,0,.35);transition:transform .12s ease}
+      box-shadow:0 12px 40px rgba(0,0,0,.35);transition:transform .12s ease;margin:10px}
     a.cta:hover{transform:translateY(-3px)}
     footer{margin-top:60px;font-size:13px;color:#9fb0df}
   </style>
 </head>
+
 <body>
+
   <img src="/icon.png" alt="Innovation Means World logo" width="96"
        style="border-radius:20px;box-shadow:0 0 20px rgba(0,0,0,.5)">
-  <h1>Innovation Means World</h1>
-  <p>Welcome to our creative hub. Explore tools that help you think better, create faster,
-     and innovate offline — starting with InnoSketch.</p>
- <a id="launch-innosketch"
-   class="cta"
-   href="innosketch/"
-   onclick="window.location.href='innosketch/'; return false;">
-  🚀 Launch InnoSketch
-</a>
-  <a class="cta" href="/imagegen/">🎨 Launch Image Generator</a>
-<script>
-  // Extra safety: if something intercepts the click, force navigation.
-  document.getElementById('launch-innosketch')?.addEventListener('click', function (e) {
-    e.preventDefault();
-    window.location.href = 'innosketch/';
-  });
-</script>
 
+  <h1>Innovation Means World</h1>
+
+  <p>
+    Welcome to our creative hub. Explore tools that help you think better, create faster,
+    and innovate offline — starting with InnoSketch.
+  </p>
+
+  <a id="launch-innosketch"
+     class="cta"
+     href="innosketch/"
+     onclick="window.location.href='innosketch/'; return false;">
+    🚀 Launch InnoSketch
+  </a>
+
+  <a class="cta" href="/imagegen/">🎨 Launch Image Generator</a>
+
+  <!-- SEO Context Section (Niche Edit) -->
+  <h2>Cloud & Productivity Tools</h2>
+
+  <p>
+    Modern productivity workflows often combine offline brainstorming tools with reliable
+    cloud storage solutions. While tools like InnoSketch help organize ideas locally,
+    cloud platforms make it easier to store, access, and sync files across devices.
+    One commonly used option is
+    <a href="https://terabosapk.com/" target="_blank" rel="noopener">
+      TeraBox cloud storage
+    </a>,
+    which provides large online storage capacity and simple file management for everyday use.
+  </p>
+  <!-- End SEO Context Section -->
+
+  <script>
+    // Extra safety: if something intercepts the click, force navigation.
+    document.getElementById('launch-innosketch')?.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.location.href = 'innosketch/';
+    });
+  </script>
 
 </body>
 </html>
