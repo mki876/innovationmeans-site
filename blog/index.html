@@ -3,83 +3,378 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Innovation Means World — Insights on Innovation, Strategy & Modern Creation</title>
-  <meta name="description" content="Editorial insights on innovation, strategy, design, and modern creation — plus lightweight tools like InnoSketch and ImageGen." />
-  <link rel="canonical" href="https://innovationmeans.world/" />
+
+  <title>Innovation Means World – Blog | Innovation, Strategy & Modern Creation</title>
+  <meta name="description" content="Editorial insights on innovation, strategy, design, and modern creation — plus lightweight tools for creators and builders." />
+  <link rel="canonical" href="https://innovationmeans.world/blog/" />
   <link rel="icon" href="/icon.png" type="image/png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Innovation Means World – Blog" />
+  <meta property="og:description" content="Editorial insights on innovation, strategy, design, and modern creation." />
+  <meta property="og:image" content="https://innovationmeans.world/icon.png" />
+  <meta property="og:url" content="https://innovationmeans.world/blog/" />
+
   <style>
-    :root{--bg:#0b1020;--ink:#eaf0ff;--muted:#a9b5d9;--line:rgba(255,255,255,.12);--accent:#7ef0ff;--max:1100px;--serif:ui-serif,Georgia,Times;--sans:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+    :root{
+      --bg0:#070B18;
+      --bg1:#0A1026;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.10);
+      --text:#EAF0FF;
+      --muted:#A9B5D9;
+      --brand:#7EF0FF;
+      --brand2:#5AA2FF;
+      --shadow: 0 14px 50px rgba(0,0,0,.45);
+      --radius:18px;
+      --radius2:24px;
+      --max:1180px;
+    }
     *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#070b18,#0b1020);color:var(--ink);font-family:var(--sans);line-height:1.7}
-    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
-    header{border-bottom:1px solid var(--line);background:rgba(7,11,24,.85);position:sticky;top:0;backdrop-filter:blur(10px)}
-    .nav{max-width:var(--max);margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-    .brand{font-weight:800;letter-spacing:.3px}
-    .menu{display:flex;gap:14px;flex-wrap:wrap}
-    .menu a{color:var(--muted);font-weight:600} .menu a:hover{color:var(--ink);text-decoration:none}
-    .wrap{max-width:var(--max);margin:0 auto;padding:34px 18px 70px;display:grid;gap:18px}
-    .hero{border:1px solid var(--line);border-radius:22px;padding:26px;background:rgba(255,255,255,.03)}
-    h1{font-family:var(--serif);font-size:44px;line-height:1.08;margin:0 0 10px;letter-spacing:-.6px}
-    .lead{color:var(--muted);font-size:18px;margin:0}
-    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
-    @media(max-width:980px){.grid{grid-template-columns:1fr} h1{font-size:38px}}
-    .card{border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.03);padding:20px}
-    .k{color:var(--muted);font-size:13px;margin:0 0 6px}
-    h2{margin:0 0 8px;font-size:18px}
-    p{margin:0;color:rgba(234,240,255,.90);font-size:16px}
-    .btn{display:inline-flex;gap:10px;align-items:center;margin-top:12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-weight:800}
-    .btn:hover{text-decoration:none;background:rgba(255,255,255,.06)}
-    footer{border-top:1px solid var(--line);max-width:var(--max);margin:0 auto;padding:24px 18px 40px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 0%, rgba(126,240,255,.16), transparent 55%),
+        radial-gradient(1000px 600px at 95% 15%, rgba(90,162,255,.16), transparent 52%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 18px 60px}
+    /* Top bar */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; padding:14px 16px;
+      border:1px solid var(--line); background:rgba(0,0,0,.20);
+      border-radius:999px; box-shadow:0 12px 40px rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; min-width:240px;
+    }
+    .brand img{
+      width:38px; height:38px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.35)
+    }
+    .brand b{display:block; font-size:14px; letter-spacing:.2px}
+    .brand span{display:block; font-size:12px; color:var(--muted)}
+    .nav{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px; border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--text); text-decoration:none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      font-weight:650; font-size:13px;
+    }
+    .pill:hover{transform:translateY(-2px); background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18)}
+    .pill.primary{
+      background: linear-gradient(90deg, rgba(90,162,255,.95), rgba(126,240,255,.95));
+      color:#061023; border-color:transparent;
+    }
+    .pill.primary:hover{background: linear-gradient(90deg, rgba(90,162,255,1), rgba(126,240,255,1))}
+    .right{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end; min-width:240px;
+    }
+
+    /* Hero */
+    .hero{
+      margin-top:22px;
+      border-radius:var(--radius2);
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      padding:26px 22px;
+      backdrop-filter: blur(12px);
+    }
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      color:var(--muted); font-size:12px; font-weight:650;
+    }
+    .hero h1{
+      margin:14px 0 10px;
+      font-size:44px; line-height:1.07;
+      letter-spacing:-.8px;
+    }
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:16.5px;
+      max-width:850px;
+      line-height:1.65;
+    }
+
+    /* Layout grid */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.45fr .75fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .brand, .right{min-width:auto}
+      .hero h1{font-size:36px}
+    }
+
+    /* Cards */
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius2);
+      background:var(--card);
+      box-shadow:0 12px 40px rgba(0,0,0,.28);
+      overflow:hidden;
+    }
+    .card .pad{padding:18px}
+    .card h2{margin:0 0 10px; font-size:18px}
+    .meta{display:flex; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12.5px}
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px; border-radius:999px;
+      background:rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--muted); font-size:12px; font-weight:650;
+    }
+
+    /* Featured */
+    .featured{
+      display:grid;
+      grid-template-columns: 1fr;
+    }
+    .featured .heroimg{
+      height:160px;
+      background:
+        radial-gradient(600px 220px at 20% 20%, rgba(126,240,255,.20), transparent 60%),
+        radial-gradient(600px 240px at 95% 20%, rgba(90,162,255,.22), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-bottom:1px solid var(--line);
+    }
+    .featured h2{font-size:22px; margin:0 0 8px}
+    .featured p{margin:0 0 14px; color:var(--muted); line-height:1.6}
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:11px 14px; border-radius:14px;
+      text-decoration:none; font-weight:750; font-size:13px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{transform:translateY(-2px); background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.20)}
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(90,162,255,.95), rgba(126,240,255,.95));
+      color:#061023; border-color:transparent;
+    }
+
+    /* Latest list */
+    .list{
+      display:grid;
+      gap:12px;
+      padding:14px;
+    }
+    .item{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:8px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      text-decoration:none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .item:hover{transform:translateY(-2px); background:rgba(0,0,0,.24); border-color:rgba(255,255,255,.16)}
+    .item b{font-size:14px}
+    .item p{margin:0; color:var(--muted); font-size:13px; line-height:1.55}
+    .item .meta{margin-top:2px}
+
+    /* Topics rail */
+    .rail{
+      display:grid; gap:12px; padding:14px;
+    }
+    .topic{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+    }
+    .topic h3{margin:0 0 8px; font-size:14px}
+    .topic p{margin:0 0 12px; color:var(--muted); font-size:13px; line-height:1.55}
+    .topic a{display:inline-flex; font-weight:750; font-size:13px; text-decoration:none}
+    .topic a:hover{text-decoration:underline}
+
+    /* Footer */
+    footer{
+      margin-top:24px;
+      color:var(--muted);
+      font-size:12.5px;
+      display:flex; flex-wrap:wrap; gap:10px;
+      align-items:center; justify-content:space-between;
+      padding:16px 6px 0;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+    .footlinks{display:flex; gap:12px; flex-wrap:wrap}
+    .footlinks a{color:var(--muted); text-decoration:none}
+    .footlinks a:hover{text-decoration:underline; color:var(--text)}
   </style>
 </head>
+
 <body>
+  <div class="wrap">
+    <!-- Top bar -->
+    <div class="topbar" role="navigation" aria-label="Primary">
+      <div class="brand">
+        <img src="/icon.png" alt="Innovation Means World logo" />
+        <div>
+          <b>Innovation Means World</b>
+          <span>Editorial insights • Minimal tools • Trend signals</span>
+        </div>
+      </div>
 
-<header>
-  <div class="nav">
-    <div class="brand"><a href="/" style="color:var(--ink);text-decoration:none;">Innovation Means World</a></div>
-    <nav class="menu">
-      <a href="/blog/">Blog</a>
-      <a href="/design-inspiration.html">Design</a>
-      <a href="/innosketch/">InnoSketch</a>
-      <a href="/imagegen/">ImageGen</a>
-    </nav>
+      <div class="nav">
+        <a class="pill" href="/">Home</a>
+        <a class="pill" href="/blog/">Blog</a>
+        <a class="pill" href="/innosketch/">InnoSketch</a>
+        <a class="pill" href="/imagegen/">ImageGen</a>
+        <a class="pill" href="/design-inspiration.html">Design hub</a>
+      </div>
+
+      <div class="right">
+        <a class="pill primary" href="/innosketch/">Open InnoSketch</a>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero" aria-label="Blog intro">
+      <span class="kicker">✦ IMW Blog • Practical, editorial writing</span>
+      <h1>Insights on innovation, strategy, and modern creation.</h1>
+      <p>
+        This is the editorial hub for Innovation Means World. We publish clear, practical articles on
+        innovation systems, product thinking, design clarity, and execution — built for creators, builders, and operators.
+      </p>
+    </section>
+
+    <div class="grid">
+      <!-- Left: Featured + Latest -->
+      <div style="display:grid; gap:18px;">
+        <!-- Featured -->
+        <article class="card featured" aria-label="Featured article">
+          <div class="heroimg" aria-hidden="true"></div>
+          <div class="pad">
+            <div class="meta" style="margin-bottom:10px;">
+              <span class="tag">Featured</span>
+              <span class="tag">Innovation</span>
+              <span class="tag">8–10 min read</span>
+            </div>
+
+            <!-- IMPORTANT: Update this link to your real featured article -->
+            <h2>Why innovation matters (and how to build it into execution)</h2>
+            <p>
+              Innovation isn’t just brainstorming — it’s a repeatable system. Learn how to frame problems, set constraints,
+              run small experiments, and scale what works without losing speed.
+            </p>
+
+            <div class="btnrow">
+              <a class="btn primary" href="/blog/why-innovation-matters.html">Read featured</a>
+              <a class="btn" href="/blog/">Browse all posts</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Latest -->
+        <section class="card" aria-label="Latest posts">
+          <div class="pad" style="padding-bottom:0;">
+            <h2>Latest</h2>
+            <div class="meta">
+              <span>Updated as you publish</span>
+              <span>•</span>
+              <span>Lightweight pages</span>
+            </div>
+          </div>
+
+          <div class="list">
+            <!-- Update links/titles to your real articles -->
+            <a class="item" href="/blog/why-innovation-matters.html">
+              <b>Why innovation matters (and how to build it into execution)</b>
+              <p>Practical frameworks for turning ideas into repeatable execution systems.</p>
+              <div class="meta">
+                <span>Innovation</span><span>•</span><span>8–10 min</span><span>•</span><span>Updated monthly</span>
+              </div>
+            </a>
+
+            <a class="item" href="/blog/innovation-systems.html">
+              <b>Innovation systems: a simple operating model for teams</b>
+              <p>How to organize discovery, delivery, and learning loops without chaos.</p>
+              <div class="meta">
+                <span>Strategy</span><span>•</span><span>6–8 min</span>
+              </div>
+            </a>
+
+            <a class="item" href="/blog/design-clarity.html">
+              <b>Design clarity: how minimal UI improves trust</b>
+              <p>Structure, typography, and restraint — the fastest path to premium feel.</p>
+              <div class="meta">
+                <span>Design</span><span>•</span><span>5–7 min</span>
+              </div>
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right: Topics rail -->
+      <aside class="card" aria-label="Topics">
+        <div class="pad">
+          <h2>Topics</h2>
+          <p style="margin:0; color:var(--muted); line-height:1.6;">
+            Keep the site focused and editorial. Use these categories to organize posts.
+          </p>
+        </div>
+
+        <div class="rail">
+          <div class="topic">
+            <h3>Innovation</h3>
+            <p>Frameworks, experiments, execution, and real-world examples.</p>
+            <a href="/blog/#innovation">Open</a>
+          </div>
+
+          <div class="topic">
+            <h3>Strategy</h3>
+            <p>How to choose constraints, priorities, and operating models that scale.</p>
+            <a href="/blog/#strategy">Open</a>
+          </div>
+
+          <div class="topic">
+            <h3>Design</h3>
+            <p>Minimal UI signals, visual identity, and product polish.</p>
+            <a href="/design-inspiration.html">Open</a>
+          </div>
+
+          <div class="topic">
+            <h3>Tools</h3>
+            <p>Lightweight utilities that support creators and builders.</p>
+            <a href="/innosketch/">Open InnoSketch</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div>© 2026 Innovation Means World</div>
+      <!-- Keep footer clean. Don’t expose sitemap/robots here. -->
+      <div class="footlinks">
+        <a href="/">Home</a>
+        <a href="/blog/">Blog</a>
+        <a href="/innosketch/">InnoSketch</a>
+        <a href="/imagegen/">ImageGen</a>
+      </div>
+    </footer>
   </div>
-</header>
-
-<main class="wrap">
-  <section class="hero">
-    <h1>Innovation, strategy, and modern creation — explained clearly.</h1>
-    <p class="lead">
-      A focused editorial hub for builders and creators. Read long-form insights, explore design references,
-      and use lightweight tools when you need speed.
-    </p>
-  </section>
-
-  <section class="grid">
-    <article class="card">
-      <p class="k">Featured • Innovation</p>
-      <h2>Why Innovation Matters — and How to Build It Into Execution</h2>
-      <p>A practical, system-first view of innovation: problem framing, experimentation, feedback loops, and scaling.</p>
-      <a class="btn" href="/blog/why-innovation-matters.html">Read article →</a>
-    </article>
-
-    <aside class="card">
-      <p class="k">Quick links</p>
-      <h2>Explore</h2>
-      <p><a href="/design-inspiration.html">Design & Aesthetic Inspiration</a></p>
-      <p style="margin-top:8px"><a href="/innosketch/">InnoSketch (offline mind mapping)</a></p>
-      <p style="margin-top:8px"><a href="/imagegen/">ImageGen (visual exploration)</a></p>
-    </aside>
-  </section>
-</main>
-
-<footer>
-  <div>© <span id="y"></span> Innovation Means World</div>
-  <div><a href="/blog/">Blog</a> · <a href="/design-inspiration.html">Design</a> · <a href="/innosketch/">InnoSketch</a></div>
-</footer>
-
-<script>
-  document.getElementById('y').textContent = new Date().getFullYear();
-</script>
 </body>
 </html>
