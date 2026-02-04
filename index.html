@@ -1,84 +1,198 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Innovation Means World — Build, Create, Innovate</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore Innovation Means World — a creative hub offering free web tools like InnoSketch for brainstorming and productivity.">
-  <link rel="canonical" href="https://innovationmeans.world/">
-  <link rel="icon" href="/icon.png" type="image/png">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Innovation Means World — Create & Innovate">
-  <meta property="og:description" content="Free innovation tools for creative minds. Start with InnoSketch — brainstorm offline and export your ideas.">
-  <meta property="og:image" content="https://innovationmeans.world/icon.png">
-  <meta property="og:url" content="https://innovationmeans.world/">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Innovation Means World — Tools for Thinking, Creating & Building</title>
+  <meta name="description" content="Innovation Means World is a small hub of fast, free tools — starting with InnoSketch (offline mind mapping) and ImageGen." />
+  <link rel="canonical" href="https://innovationmeans.world/" />
+  <link rel="icon" href="/icon.png" type="image/png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Innovation Means World — Build, Create, Innovate" />
+  <meta property="og:description" content="Fast, free tools for creators — InnoSketch and ImageGen." />
+  <meta property="og:image" content="https://innovationmeans.world/icon.png" />
+  <meta property="og:url" content="https://innovationmeans.world/" />
+
   <style>
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-      background:linear-gradient(180deg,#0b1020,#101833);color:#eaf0ff;text-align:center;padding:60px 20px}
-    h1{font-size:44px;margin-bottom:10px;color:#7ef0ff}
-    h2{color:#9be7ff;margin-top:60px}
-    p{color:#a9b5d9;font-size:18px;max-width:720px;margin:0 auto 30px}
-    a.cta{display:inline-block;background:linear-gradient(90deg,#5aa2ff,#7ef0ff);color:#061023;
-      text-decoration:none;font-weight:700;padding:14px 24px;border-radius:14px;
-      box-shadow:0 12px 40px rgba(0,0,0,.35);transition:transform .12s ease;margin:10px}
-    a.cta:hover{transform:translateY(-3px)}
-    footer{margin-top:70px;font-size:14px;color:#9fb0df}
-    footer a{color:#7ef0ff;text-decoration:none}
-    footer a:hover{text-decoration:underline}
+    :root{
+      --bg1:#070B18; --bg2:#0D1633;
+      --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.10);
+      --text:#EAF0FF; --muted:#A9B5D9;
+      --aqua:#7EF0FF; --blue:#5AA2FF;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      background: radial-gradient(1000px 600px at 15% 10%, rgba(126,240,255,.16), transparent 60%),
+                  radial-gradient(900px 520px at 85% 20%, rgba(90,162,255,.18), transparent 55%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{max-width:1120px;margin:0 auto;padding:28px 18px 80px}
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:14px;margin-bottom:22px;
+    }
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none}
+    .brand img{width:42px;height:42px;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,.45)}
+    .brand b{display:block;font-size:15px;letter-spacing:.2px}
+    .brand span{display:block;font-size:12px;color:var(--muted)}
+    .menu{display:flex;gap:10px;flex-wrap:wrap}
+    .chip{
+      text-decoration:none;
+      padding:10px 12px;border:1px solid var(--border);
+      border-radius:999px;background:rgba(255,255,255,.04);
+      color:var(--muted);font-weight:600;font-size:13px;
+      transition:transform .12s ease, background .12s ease;
+    }
+    .chip:hover{transform:translateY(-2px);background:rgba(255,255,255,.07);color:var(--text)}
+    .hero{
+      border:1px solid var(--border);
+      background:linear-gradient(135deg, rgba(126,240,255,.10), rgba(255,255,255,.04));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:34px 26px;
+      overflow:hidden;
+      position:relative;
+    }
+    .hero h1{margin:0 0 10px;font-size:44px;line-height:1.08;letter-spacing:-.6px}
+    .hero p{margin:0;color:var(--muted);max-width:780px;font-size:17px;line-height:1.6}
+    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;
+      text-decoration:none;font-weight:800;
+      padding:13px 16px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 14px 40px rgba(0,0,0,.35);
+      transition:transform .12s ease;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .primary{background:linear-gradient(90deg,var(--blue),var(--aqua));color:#051025}
+    .ghost{background:rgba(255,255,255,.05);color:var(--text)}
+    .grid{
+      margin-top:18px;
+      display:grid;gap:14px;
+      grid-template-columns:repeat(12, 1fr);
+    }
+    .card{
+      grid-column:span 6;
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:0 14px 40px rgba(0,0,0,.25);
+      min-height:160px;
+    }
+    .card h2{margin:0 0 6px;font-size:18px}
+    .card p{margin:0;color:var(--muted);line-height:1.6}
+    .card .mini{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+    .mini a{font-size:13px}
+    .kpiRow{
+      margin-top:14px;
+      display:grid;gap:12px;
+      grid-template-columns:repeat(3,1fr);
+    }
+    .kpi{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      border-radius:18px;padding:14px;
+    }
+    .kpi b{font-size:18px}
+    .kpi span{display:block;color:var(--muted);font-size:12px;margin-top:6px}
+    footer{
+      margin-top:42px;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,.10);
+      color:var(--muted);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      flex-wrap:wrap;
+      font-size:13px;
+    }
+    footer a{color:var(--muted);text-decoration:none}
+    footer a:hover{color:var(--text)}
+    @media (max-width:900px){
+      .card{grid-column:span 12}
+      .hero h1{font-size:38px}
+      .kpiRow{grid-template-columns:1fr}
+    }
   </style>
 </head>
 
 <body>
-
-  <img src="/icon.png" alt="Innovation Means World logo" width="96"
-       style="border-radius:20px;box-shadow:0 0 20px rgba(0,0,0,.5)">
-
-  <h1>Innovation Means World</h1>
-
-  <p>
-    Welcome to our creative hub. Explore tools that help you think better, create faster,
-    and innovate offline — starting with InnoSketch.
-  </p>
-
-  <a id="launch-innosketch"
-     class="cta"
-     href="innosketch/"
-     onclick="window.location.href='innosketch/'; return false;">
-    🚀 Launch InnoSketch
-  </a>
-
-  <a class="cta" href="/imagegen/">🎨 Launch Image Generator</a>
-
-  <!-- SEO Context Section (Niche Edit for TeraBox) -->
-  <h2>Cloud & Productivity Tools</h2>
-
-  <p>
-    Modern productivity workflows often combine offline brainstorming tools with reliable
-    cloud storage solutions. While tools like InnoSketch help organize ideas locally,
-    cloud platforms make it easier to store, access, and sync files across devices.
-    One commonly used option is
-    <a href="https://terabosapk.com/" target="_blank" rel="noopener">
-      TeraBox cloud storage
-    </a>,
-    which provides large online storage capacity and simple file management for everyday use.
-  </p>
-
-  <!-- Footer with INTERNAL link only -->
-  <footer>
-    <p>
-      Looking for visual ideas and fashion aesthetics?
-      <a href="/design-inspiration.html">
-        Explore Design & Style Inspiration
+  <div class="wrap">
+    <header class="nav">
+      <a class="brand" href="/">
+        <img src="/icon.png" alt="Innovation Means World" />
+        <div>
+          <b>Innovation Means World</b>
+          <span>Tools • Minimal UI • Trend signals</span>
+        </div>
       </a>
-    </p>
-  </footer>
+      <nav class="menu">
+        <a class="chip" href="/tools.html">Tools</a>
+        <a class="chip" href="/design-inspiration.html">Design Inspiration</a>
+        <a class="chip" href="/about.html">About</a>
+        <a class="chip" href="/contact.html">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Build, Create, Innovate — fast.</h1>
+      <p>
+        Innovation Means World is a compact hub of lightweight tools for creators.
+        Start with <strong>InnoSketch</strong> (offline mind mapping) and explore new modules like <strong>ImageGen</strong>.
+      </p>
+
+      <div class="ctaRow">
+        <a class="btn primary" href="/innosketch/">🚀 Launch InnoSketch</a>
+        <a class="btn ghost" href="/imagegen/">🎨 Launch ImageGen</a>
+        <a class="btn ghost" href="/tools.html">🧰 View all tools</a>
+      </div>
+
+      <div class="kpiRow">
+        <div class="kpi"><b>Offline-first</b><span>Use tools without accounts or tracking.</span></div>
+        <div class="kpi"><b>Fast loading</b><span>Simple HTML, minimal assets, GitHub Pages friendly.</span></div>
+        <div class="kpi"><b>Creator focused</b><span>Designed for ideas → output → execution.</span></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>InnoSketch</h2>
+        <p>Brainstorm offline, map ideas quickly, and export clean structure for planning and writing.</p>
+        <div class="mini">
+          <a class="chip" href="/innosketch/">Open</a>
+          <a class="chip" href="/tools.html#innosketch">Learn more</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Design & Aesthetic Inspiration</h2>
+        <p>A curated page of design cues and references used to guide clean UI decisions.</p>
+        <div class="mini">
+          <a class="chip" href="/design-inspiration.html">Open page</a>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <div>© <span id="y"></span> Innovation Means World</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <a href="/robots.txt">robots.txt</a>
+        <a href="/sitemap.xml">sitemap</a>
+        <a href="https://github.com/mki876/innovationmeans-site" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </footer>
+  </div>
 
   <script>
-    document.getElementById('launch-innosketch')?.addEventListener('click', function (e) {
-      e.preventDefault();
-      window.location.href = 'innosketch/';
-    });
+    document.getElementById('y').textContent = new Date().getFullYear();
   </script>
-
 </body>
 </html>
