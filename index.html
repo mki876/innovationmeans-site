@@ -22,7 +22,9 @@
       text-decoration:none;font-weight:700;padding:14px 24px;border-radius:14px;
       box-shadow:0 12px 40px rgba(0,0,0,.35);transition:transform .12s ease;margin:10px}
     a.cta:hover{transform:translateY(-3px)}
-    footer{margin-top:60px;font-size:13px;color:#9fb0df}
+    footer{margin-top:70px;font-size:14px;color:#9fb0df}
+    footer a{color:#7ef0ff;text-decoration:none}
+    footer a:hover{text-decoration:underline}
   </style>
 </head>
 
@@ -47,7 +49,7 @@
 
   <a class="cta" href="/imagegen/">🎨 Launch Image Generator</a>
 
-  <!-- SEO Context Section (Niche Edit) -->
+  <!-- SEO Context Section (Niche Edit for TeraBox) -->
   <h2>Cloud & Productivity Tools</h2>
 
   <p>
@@ -60,10 +62,18 @@
     </a>,
     which provides large online storage capacity and simple file management for everyday use.
   </p>
-  <!-- End SEO Context Section -->
+
+  <!-- Footer with INTERNAL link only -->
+  <footer>
+    <p>
+      Looking for visual ideas and fashion aesthetics?
+      <a href="/design-inspiration.html">
+        Explore Design & Style Inspiration
+      </a>
+    </p>
+  </footer>
 
   <script>
-    // Extra safety: if something intercepts the click, force navigation.
     document.getElementById('launch-innosketch')?.addEventListener('click', function (e) {
       e.preventDefault();
       window.location.href = 'innosketch/';
